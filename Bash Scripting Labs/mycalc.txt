@@ -1,0 +1,124 @@
+#!bin/bash
+#Presented by Aliab Eman
+#Date: 12/8/2020
+#SID: 041000420
+#Course: CST8102-303
+#Lab 9- Linux Shell Scripting III
+#The purpose of this script is to perform basic calculations.
+#** This lab is presented via Email, with the assistance of my lab partner, Ajithyugan Jeyakumar.
+#** We did not copywright, we brainstormed together to piece the lab completely.
+
+#Addition function is referenced both from the terminal, if the user prompts the shell script with 3 parameters
+#as well as from the menu screen/ user input, if the user does not input any parameters from the terminal.
+function add ()
+{
+#Parameter $1 and Parameter $2 are passed values from either the terminal upon execution,
+#or by the user input when the add/ subtract functions are called from inside the shell script.
+((value=$1+$2))
+echo "The sum of $1 plus $2 is $value"
+}
+
+#Subtraction function operates the same way as the add function.
+function subtract ()
+{
+((value=$1-$2))
+echo "The sum of $1 minus $2 is $value"
+}
+#Assigning values to the variables used in the menu/ user input option.
+choice1=null
+int1=0
+choice2=null
+int2=0
+
+#initial condition ($# = 3) must be satisfied alongside parameter 2's option of "+" or "-" for the script to execute the terminal file input
+#If the user executes the file with three parameters, the first integer, + or -, and the third integer, the if and elif statements apply.
+#if parameter 2 from the terminal file execution is "+", then this loop is followed
+if [[ $2 = "+" ]] && [[ $# = 3 ]] 
+#the values from parameter 1 and parameter 3 from terminal file execution are passed to the add function
+then add $1 $3
+#if parameter 2 from the terminal file execution is "-", this loop is followed
+elif [[ $2 = "-" ]] && [[ $# = 3 ]]
+#the values from parameter 1 and parameter 3 from terminal file execution are passed to the subtract function
+then subtract $1 $3
+
+#The menu options are presented when the conditions for terminal file input execution arent satisfied
+elif [[ $# = 0 ]]
+then
+	#The way this while loop SHOULD work, is that whenever the user inputs either "x" or "X", the program should terminate.
+	while [[ $choice1 != "x" ]] && [[ $choice1 != "X" ]] || [[ $int1 != "x" ]] && [[ $int1 != "X" ]] || [[ $choice2 != "x" ]] && [[ $choice2 != "X" ]] || [[ $int2 != "x" ]] && [[ $int2 != "X" ]]
+	do
+		
+      		echo "Menu 1"
+		echo "C) Calculation"
+  		echo "X) Exit"
+		read -p "Selection: " choice1
+		
+		#User input needs to match a menu option or else it becomes an invalid entry
+		if [[ $choice1 == "C" ]] || [[ $choice1 == "c" ]]
+		then
+			clear
+			sleep 1
+			echo "Menu 2"
+			read -p "Please enter an integer number or X to exit: " int1
+			clear
+
+			#Reading for integer values or exiting the program if X is selected...
+			if [[ $int1 != "X" ]] && [[ $int1 != "x" ]]
+			then
+				echo "Menu 3"
+                		echo "+) Add"
+                		echo "-) Subtract"
+                		echo "X) Exit"
+				read -p "Choice: " choice2
+				#calling the add function if Menu 3 choice is "+"
+				if [[ $choice2 == "+" ]]
+				then 
+					read -p "Please enter an integer number: " int2
+					add $int1 $int2
+				#calling the subtract function if Menu 3 choice is "-"
+				elif [[ $choice2 == "-" ]]
+				then 
+					read -p "Please enter an integer number: " int2
+					subtract $int1 $int2
+				#exit the program if the user input is to exit
+				elif [[ $choice2 == "X" ]] || [[ $choice2 == "x" ]]
+				then
+					echo "Goodbye"
+					sleep 2
+					exit
+				#Any invalid entries outside of "+", "-", "x", or "X" are invalid entries.
+				else
+					echo "invalid entry..."
+					sleep 2
+		
+				#Exit menu 3
+				fi	
+			#If Menu 2 option is to exit, the program exits
+			elif [[ $int1 == "X" ]] || [[ $int1 == "x" ]]
+			then
+				echo "Goodbye"
+				sleep 2
+				exit
+		#If an invalid Menu 2 option is prompted, display message.
+		else
+				echo "invalid entry..."
+				sleep 2
+		#exit menu 2	
+		fi
+
+		elif [[ $choice1 == "X" ]] || [[ $choice1 == "x" ]]
+		then 
+			echo "Goodbye"
+			sleep 2
+			exit
+		
+		else
+			echo "Invalid Input..."	
+	#exit menu 1
+	fi
+		
+done
+#Exit main loop of shell script, choices for this loop are passing values to the shell, or passing values directly to the function
+#inside the shell, from user inputs.
+fi
+
